@@ -1,0 +1,799 @@
+package sample;
+
+import com.sun.javafx.scene.control.IntegerField;
+import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import java.util.ArrayList;
+
+import java.awt.*;
+import java.io.IOException;
+import java.sql.*;
+import java.util.concurrent.Flow;
+
+import static java.lang.Integer.*;
+
+
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        VBox ver_pri=new VBox();
+        HBox hor_pri=new HBox();
+        ver_pri.setSpacing(8);
+        ver_pri.setAlignment(Pos.CENTER);
+        TextField user_name = new TextField();
+        user_name.setPrefColumnCount(10);
+        Button admin=new Button("admin");
+        admin.setTranslateY(50);
+        PasswordField password = new PasswordField();
+        Text caution = new Text(1, 1, "");
+        Label title = new Label("user Account");
+        title.setFont(Font.font("Times new Roman", FontWeight.BOLD, 20));
+        title .setTranslateY(-50);
+        Button log_in = new Button("log in");
+        Button sign_up = new Button("sign up");
+        ver_pri.getChildren().add(title);
+        ver_pri.getChildren().addAll(new Label("UserName"), user_name);
+        ver_pri.getChildren().addAll(new Label("Password"), password);
+        hor_pri.getChildren().addAll(log_in, sign_up);
+        ver_pri.getChildren().addAll(hor_pri);
+        hor_pri.setAlignment(Pos.CENTER);
+        hor_pri.setSpacing(5);
+        ver_pri.getChildren().addAll(caution);
+        ver_pri.getChildren().addAll(admin);
+        caution.setTranslateX(10);
+        caution.setTranslateY(50);
+        caution.setFill(Color.RED);
+        ver_pri.setPadding(new Insets(25, 25, 25, 25));
+        /* here when press on log in button*/
+        log_in.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    if (user_name.getText().trim().isEmpty() && password.getText().trim().isEmpty()) {
+                        caution.setText("please enter your username and password");
+                    } else if (user_name.getText().trim().isEmpty()) {
+                        caution.setText("please enter your username");
+                    } else if (password.getText().trim().isEmpty()) {
+                        caution.setText("please enter your password");
+                    } else {
+                        ArrayList<String> f;
+                        f = get_values();
+                        for (int i = 0; i < f.size(); i = i + 9) {
+                            if ((f.get(i).equals(user_name.getText()))&&(f.get(i+1).equals(password.getText()))) {
+                                Stage newsecondWindow = new Stage();
+                                int sal_datebase=parseInt(f.get(i+6));
+                                Pane back_button=new Pane();
+                                Button enter=new Button("insert");
+                                newsecondWindow.setX(primaryStage.getX());
+                                newsecondWindow.setY(primaryStage.getY());
+                                newsecondWindow.show();
+                                primaryStage.hide();
+                                TextField sal_enter=new TextField();
+                                VBox vertical2=new VBox();
+                                vertical2.setSpacing(5);
+                                HBox h=new HBox();
+                                HBox h2=new HBox();
+                                HBox h3=new HBox();
+                                HBox h4=new HBox();
+                                HBox h5=new HBox();
+                                HBox h6=new HBox();
+                                HBox h7=new HBox();
+                                HBox h8=new HBox();
+                                HBox h9=new HBox();
+                                h.setAlignment(Pos.CENTER);
+                                h2.setAlignment(Pos.CENTER);
+                                h3.setAlignment(Pos.CENTER);
+                                h4.setAlignment(Pos.CENTER);
+                                h5.setAlignment(Pos.CENTER);
+                                h6.setAlignment(Pos.CENTER);
+                                h7.setAlignment(Pos.CENTER);
+                                h9.setAlignment(Pos.CENTER);
+                                h8.setAlignment(Pos.CENTER);
+                                Button account=new Button("account");
+                                Button services=new Button("services");
+                                account.setPrefSize(125,50);
+                                services.setPrefSize(125,50);
+                                Button back=new Button("Back");
+                                back_button.getChildren().add(back);
+                                Label name_lab=new Label("name :");
+                                Label card_lab=new Label("card number :");
+                                Label card_type_lab=new Label("card type :");
+                                Label salary_lab=new Label("salary :");
+                                name_lab.setFont(Font.font("Times new Roman", FontWeight.BOLD, 15));
+                                card_lab.setFont(Font.font("Times new Roman", FontWeight.BOLD, 15));
+                                card_type_lab.setFont(Font.font("Times new Roman", FontWeight.BOLD, 15));
+                                salary_lab.setFont(Font.font("Times new Roman", FontWeight.BOLD, 30));
+                                Text name=new Text("");
+                                Text card=new Text("");
+                                Text card_type=new Text("");
+                                Text salary=new Text("");
+                                card.setText(f.get(i+4));
+                                card_type.setText(f.get(i+5));
+                                if(f.get(i+6)==null){
+                                    salary.setText("none");
+                                }
+                                else{
+                                    salary.setText(f.get(i+6));
+
+                                }
+                                salary.setFont(Font.font("Times new Roman", FontWeight.THIN, 50));
+                                salary.setFill(Color.GREEN);
+                                Text sal_text=new Text("Enter ur salary");
+                                sal_enter.setPrefColumnCount(4);
+                                enter.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+
+                                        try {
+                                            if(sal_enter.getText().equals("")){
+
+                                            }
+                                            else {
+                                                int sa = parseInt(sal_enter.getText());
+                                                insert_salary(sa,card.getText());
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                name.setText(f.get(i+2)+" "+f.get(i+3));
+                                Text loan_state=new Text("");
+                                String loan_state_com=f.get(i+7);
+                                int ls_int=parseInt(loan_state_com);
+                                if(ls_int==0){
+                                    loan_state.setText("no loan");
+                                    loan_state.setFill(Color.RED);
+                                }
+                                else if (ls_int==1){
+                                    loan_state.setText("exits");
+                                    loan_state.setFill(Color.GREEN);
+                                }
+                                vertical2.getChildren().add(back);
+                                Label loan_state_lab=new Label("Loan state : ");
+                                loan_state_lab.setFont(Font.font("Times new Roman", FontWeight.BOLD, 15));
+                                Label current_money_lab=new Label("current_money  : ");
+                                current_money_lab.setFont(Font.font("Times new Roman", FontWeight.BOLD, 15));
+                                Text current_money=new Text();
+                                String cs=f.get(i+8);
+                                current_money.setText(cs);
+                                h.getChildren().addAll(name_lab,name);
+                                h2.getChildren().addAll(card_lab,card);
+                                h3.getChildren().addAll(card_type_lab,card_type);
+                                h4.getChildren().addAll(salary_lab,salary);
+                                h7.getChildren().addAll(loan_state_lab,loan_state);
+                                h9.getChildren().addAll(current_money_lab,current_money);
+                                h8.getChildren().addAll(account,services);
+                                account.setTranslateY(140);
+                                services.setTranslateY(140);
+                                vertical2.getChildren().addAll(h,h2,h3,h4,h7,h9,h8);
+                                services.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+                                        Stage newThirdWindow = new Stage();
+                                        VBox vertical3=new VBox();
+                                        vertical3.setSpacing(10);
+                                        HBox ho1=new HBox();
+                                        HBox ho2=new HBox();
+                                        HBox ho3=new HBox();
+                                        HBox ho4=new HBox();
+                                        HBox ho5=new HBox();
+                                        HBox ho6=new HBox();
+                                        HBox ho7=new HBox();
+                                        HBox ho8=new HBox();
+                                        HBox ho9=new HBox();
+                                        ho1.setAlignment(Pos.CENTER);
+                                        ho2.setAlignment(Pos.CENTER);
+                                        ho3.setAlignment(Pos.CENTER);
+                                        ho4.setAlignment(Pos.CENTER);
+                                        ho5.setAlignment(Pos.CENTER);
+                                        ho6.setAlignment(Pos.CENTER);
+                                        ho7.setAlignment(Pos.CENTER);
+                                        ho8.setAlignment(Pos.BOTTOM_CENTER);
+                                        ho9.setAlignment(Pos.CENTER);
+                                        Button account2=new Button("account");
+                                        Button delete=new Button("delete loan");
+                                        Button services2=new Button("services");
+                                        TextField loan=new TextField();
+                                        TextField payoff=new TextField();
+                                        Button add=new Button("add");
+                                        newThirdWindow.setX(newsecondWindow.getX());
+                                        newThirdWindow.setY(newsecondWindow.getY());
+                                        newThirdWindow.show();
+                                        Text result=new Text("");
+                                        Text confirm=new Text("");
+                                        account2.setPrefSize(140,50);
+                                        account2.setTranslateY(100);
+                                        services2.setTranslateY(100);
+                                        services2.setPrefSize(140,50);
+                                        account2.setOnAction(new EventHandler<ActionEvent>() {
+                                            @Override
+                                            public void handle(ActionEvent actionEvent) {
+                                                newsecondWindow.show();
+                                                newThirdWindow.hide();
+                                            }
+                                        });
+                                        newsecondWindow.hide();
+                                        ho1.getChildren().add(new Label("Enter following information to get loan"));
+                                        ho2.getChildren().addAll(new Label("how much loan do u want :"));
+                                        ho3.getChildren().addAll(loan);
+                                        ho4.getChildren().addAll(new Label("how much money pay per month"));
+                                        ho5.getChildren().addAll(payoff);
+                                        ho6.getChildren().addAll(add);
+                                        ho7.getChildren().addAll(result);
+                                        ho9.getChildren().addAll(delete);
+                                        ho8.getChildren().addAll(account2,services2);
+                                        vertical3.getChildren().addAll(ho1,ho2,ho3,ho4,ho5,ho6,ho7,ho9,ho8);
+                                        add.setOnAction(new EventHandler<ActionEvent>() {
+                                            @Override
+                                            public void handle(ActionEvent actionEvent) {
+                                                double days=0,months=0;
+                                                int pay=parseInt(payoff.getText());
+                                                int lo=parseInt(loan.getText());
+                                                if(sal_datebase>=pay&&pay<lo){
+                                                    result.setFill(Color.BLUE);
+                                                    confirm.setFill(Color.BLUE);
+                                                    months=lo/pay;
+                                                    days=months*30;
+                                                    loan_state.setText("exist");
+                                                    loan_state.setFill(Color.GREEN);
+                                                    current_money.setText(loan.getText());
+                                                    try {
+                                                        insert_current_money_and_loan_state(loan.getText(),1);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    result.setText("add "+lo+" JD to your account");
+                                                    result.setFill(Color.GREEN);
+
+                                                }
+                                                else{
+                                                    result.setText("u dont have enough salary to loan");
+                                                    result.setFill(Color.RED);
+
+                                                }
+                                            }
+                                        });
+                                        delete.setOnAction(new EventHandler<ActionEvent>() {
+                                            @Override
+                                            public void handle(ActionEvent actionEvent) {
+                                                try {
+                                                    insert_current_money_and_loan_state("0",0);
+                                                    loan_state.setText("no loan");
+                                                    loan_state.setFill(Color.RED);
+                                                    current_money.setText("0");
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                result.setText("delete successfully from your account");
+                                                result.setFill(Color.RED);
+                                            }
+                                        });
+                                        Scene sc3 = new Scene(vertical3,250,400);
+                                        newThirdWindow.setTitle("services");
+                                       newThirdWindow.setScene(sc3);
+                                    }
+                                });
+                                back.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent actionEvent) {
+                                      newsecondWindow.hide();
+                                      primaryStage.show();
+                                      user_name.setText("");
+                                      password.setText("");
+                                      caution.setText("");
+                                    }
+                                });
+                                Scene sc2 = new Scene(vertical2,250,400);
+                                newsecondWindow.setTitle("account_page");
+                                newsecondWindow.setScene(sc2);
+
+                                break;
+                            } else if (!(f.get(i).equals(user_name.getText())) || (!(f.get(i + 1).equals(password.getText())))) {
+                                caution.setText("username or password is wrong");
+
+                            }
+
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+        admin.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Stage newpr2 = new Stage();
+                newpr2.setTitle("bank account");
+                newpr2.setX(primaryStage.getX());
+                newpr2.setY(primaryStage.getY());
+                newpr2.show();
+                primaryStage.hide();
+                VBox ver_pri2 = new VBox();
+                HBox hor_pri2 = new HBox();
+                ver_pri2.setSpacing(8);
+                ver_pri2.setAlignment(Pos.CENTER);
+                TextField user_name2 = new TextField();
+                user_name2.setPrefColumnCount(10);
+                Button admin2 = new Button("user");
+                admin2.setTranslateY(50);
+                PasswordField password2 = new PasswordField();
+                Text caution2 = new Text(1, 1, "");
+                Label title = new Label("admin Account");
+                title.setFont(Font.font("Times new Roman", FontWeight.BOLD, 20));
+                title.setTranslateY(-50);
+                Button log_in2 = new Button("log in");
+                Button sign_up2 = new Button("sign up");
+                ver_pri2.getChildren().add(title);
+                ver_pri2.getChildren().addAll(new Label("UserName"), user_name2);
+                ver_pri2.getChildren().addAll(new Label("Password"), password2);
+                hor_pri2.getChildren().addAll(log_in2, sign_up2);
+                ver_pri2.getChildren().addAll(hor_pri2);
+                hor_pri2.setAlignment(Pos.CENTER);
+                hor_pri2.setSpacing(5);
+                ver_pri2.getChildren().addAll(caution2);
+                ver_pri2.getChildren().addAll(admin2);
+                caution2.setTranslateX(10);
+                caution2.setTranslateY(50);
+                caution2.setFill(Color.RED);
+                ver_pri2.setPadding(new Insets(25, 25, 25, 25));
+                Scene sc11 = new Scene(ver_pri2, 250, 400);
+                newpr2.setScene(sc11);
+                newpr2.setX(primaryStage.getX());
+                newpr2.setY(primaryStage.getY());
+                admin2.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        newpr2.hide();
+                        primaryStage.show();
+                    }
+                });
+                sign_up2.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        primaryStage.hide();
+                        VBox vertical1 = new VBox();
+                        HBox horizantal11 = new HBox();
+                        HBox horizantal22 = new HBox();
+                        HBox horizantal33 = new HBox();
+                        HBox horizantal44 = new HBox();
+                        HBox horizantal55 = new HBox();
+                        HBox horizantal66 = new HBox();
+                        HBox horizantal77 = new HBox();
+                        HBox horizantal88 = new HBox();
+                        HBox horizantal99 = new HBox();
+                        horizantal11.setSpacing(5);
+                        horizantal22.setSpacing(5);
+                        horizantal33.setSpacing(5);
+                        horizantal44.setSpacing(5);
+                        horizantal55.setSpacing(5);
+                        horizantal66.setSpacing(5);
+                        horizantal77.setSpacing(5);
+                        horizantal88.setSpacing(5);
+                        horizantal99.setSpacing(5);
+                        horizantal11.setAlignment(Pos.CENTER);
+                        horizantal22.setAlignment(Pos.CENTER);
+                        horizantal33.setAlignment(Pos.CENTER);
+                        horizantal44.setAlignment(Pos.CENTER);
+                        horizantal55.setAlignment(Pos.CENTER);
+                        horizantal66.setAlignment(Pos.CENTER);
+                        horizantal77.setAlignment(Pos.CENTER);
+                        horizantal88.setAlignment(Pos.CENTER);
+                        horizantal99.setAlignment(Pos.CENTER);
+                        TextField username_reg2 = new TextField();
+                        TextField first_name2 = new TextField();
+                        TextField last_name2 = new TextField();
+                        PasswordField credit_card2 = new PasswordField();
+                        TextField password_reg2 = new TextField();
+                        TextField card_type2 = new TextField();
+                        Text warning2 = new Text(1, 1, "");
+                        Button apply2 = new Button("apply");
+                        vertical1.setSpacing(12);
+                        Button cancel2 = new Button("cancel");
+                        vertical1.setPadding(new Insets(25, 25, 25, 25));
+                        vertical1.getChildren().add(new Label("Enter the following information to register"));
+                        horizantal11.getChildren().addAll(new Label("first name"), first_name2);
+                        horizantal22.getChildren().addAll(new Label("last name"), last_name2);
+                        horizantal44.getChildren().addAll(new Label("username"), username_reg2);
+                        horizantal88.getChildren().addAll(new Label("Password"), password_reg2);
+                        horizantal99.getChildren().addAll(apply2, cancel2, warning2);
+                        vertical1.getChildren().addAll(horizantal11, horizantal22, horizantal44, horizantal88, horizantal99);
+                        warning2.setTranslateY(30);
+                        warning2.setTranslateX(-150);
+                        warning2.setFill(Color.RED);
+                        Scene sc2 = new Scene(vertical1, 290, 400);
+                        Stage admin_page = new Stage();
+                        apply2.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+
+                                try {
+                                    ArrayList username_datebase = get_values();
+                                    int j = 0;
+                                    for (int i = 0; i < username_datebase.size(); i += 7) {
+                                        if (user_name.getText().equals(username_datebase.get(i))) ;
+
+                                    }
+                                    int passourd_int = parseInt(password_reg2.getText());
+                                    insert_values_admin(first_name2.getText(), last_name2.getText(), passourd_int, username_reg2.getText());
+                                    admin_page.close();
+                                    primaryStage.show();
+
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+                        cancel2.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+                                admin_page.close();
+                                primaryStage.show();
+                            }
+                        });
+                        admin_page.setTitle("register_page");
+                        admin_page.setScene(sc2);
+                        admin_page.setX(primaryStage.getX());
+                        admin_page.setY(primaryStage.getY());
+                        admin_page.show();
+                    }
+                });
+                log_in2.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        try {
+                            if (user_name2.getText().trim().isEmpty() && password2.getText().trim().isEmpty()) {
+                                caution2.setText("please enter your username and password");
+                            } else if (user_name2.getText().trim().isEmpty()) {
+                                caution2.setText("please enter your username");
+                            } else if (password2.getText().trim().isEmpty()) {
+                                caution2.setText("please enter your password");
+                            } else {
+                                try {
+                                    ArrayList<String> f2;
+                                    f2 = get_values_admin();
+                                    for (int i = 0; i < f2.size(); i = i + 4) {
+                                        if ((f2.get(i).equals(user_name2.getText())) && (f2.get(i + 1).equals(password2.getText()))) {
+                                            Stage admin_log = new Stage();
+                                            Button back_admin=new Button("back");
+                                            Button edit=new Button("edit");
+                                            TextField user_select=new TextField();
+                                            TextField edit_salary=new TextField();
+                                            admin_log.setX(primaryStage.getX());
+                                            admin_log.setY(primaryStage.getY());
+                                            admin_log.show();
+                                            newpr2.hide();
+                                            VBox vertical5 = new VBox();
+                                            vertical5.setSpacing(5);
+                                            HBox h = new HBox();
+                                            HBox h2 = new HBox();
+                                            HBox h3 = new HBox();
+                                            HBox h4 = new HBox();
+                                            HBox h5 = new HBox();
+                                            HBox h6 = new HBox();
+                                            h.setAlignment(Pos.CENTER);
+                                            h2.setAlignment(Pos.CENTER);
+                                            h3.setAlignment(Pos.CENTER);
+                                            h4.setAlignment(Pos.CENTER);
+                                            h5.setAlignment(Pos.CENTER);
+                                            h6.setAlignment(Pos.CENTER);
+                                            h5.getChildren().addAll(back_admin);
+                                            h.getChildren().addAll(new Label("Enter username specify to edit"));
+                                            h2.getChildren().addAll(user_select);
+                                            h3.getChildren().add(new Label("edit salary"));
+                                            h4.getChildren().addAll(edit_salary);
+                                            h6.getChildren().addAll(edit);
+                                            vertical5.getChildren().addAll(h5,h,h2,h3,h4,h6);
+                                            vertical5.setAlignment(Pos.CENTER);
+                                            Scene sc_admin=new Scene(vertical5,250,400);
+                                            admin_log.setScene(sc_admin);
+                                            admin_log.setTitle("admin_account");
+                                            back_admin.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent actionEvent) {
+                                                    admin_log.hide();
+                                                    newpr2.show();
+                                                }
+                                            });
+                                            edit.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent actionEvent) {
+                                                    try{
+                                                    ArrayList<String> f3;
+                                                    f3 = get_values();
+                                                    for (int i = 0; i < f3.size(); i = i + 9) {
+                                                        if ((f3.get(i).equals(user_select.getText()))){
+                                                            int sal_ed=parseInt(edit_salary.getText());
+                                                            insert_salary(sal_ed,f3.get(i+4));
+                                                        }
+
+                                                    } }catch(Exception e)   {
+                                                        e.printStackTrace();
+                                                        }
+                                                }
+                                            });
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+            }});
+
+
+        sign_up.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                primaryStage.hide();
+                VBox vertical = new VBox();
+                HBox horizantal1=new HBox();
+                HBox horizantal2=new HBox();
+                HBox horizantal3=new HBox();
+                HBox horizantal4=new HBox();
+                HBox horizantal5=new HBox();
+                HBox horizantal6=new HBox();
+                HBox horizantal7=new HBox();
+                HBox horizantal8=new HBox();
+                HBox horizantal9=new HBox();
+                horizantal1.setSpacing(5);
+                horizantal2.setSpacing(5);
+                horizantal3.setSpacing(5);
+                horizantal4.setSpacing(5);
+                horizantal5.setSpacing(5);
+                horizantal6.setSpacing(5);
+                horizantal7.setSpacing(5);
+                horizantal8.setSpacing(5);
+                horizantal9.setSpacing(5);
+                horizantal1.setAlignment(Pos.CENTER);
+                horizantal2.setAlignment(Pos.CENTER);
+                horizantal3.setAlignment(Pos.CENTER);
+                horizantal4.setAlignment(Pos.CENTER);
+                horizantal5.setAlignment(Pos.CENTER);
+                horizantal6.setAlignment(Pos.CENTER);
+                horizantal7.setAlignment(Pos.CENTER);
+                horizantal8.setAlignment(Pos.CENTER);
+                horizantal9.setAlignment(Pos.CENTER);
+                TextField username_reg = new TextField();
+                TextField first_name = new TextField();
+                TextField last_name = new TextField();
+                PasswordField credit_card=new PasswordField();
+                TextField password_reg = new TextField();
+                TextField card_type = new TextField();
+                Text warning=new Text(1,1,"");
+                Text max_credit=new Text("(Enter credit number only contain 10 numbers)");
+                Text username_exist=new Text("");
+                username_exist.setFill(Color.RED);
+                username_exist.setTranslateX(100);
+                username_exist.setTranslateY(-360);
+                max_credit.setFill(Color.GREEN);
+                Button apply = new Button("apply");
+                vertical.setSpacing(12);
+                Button cancel = new Button("cancel");
+                vertical.setPadding(new Insets(25, 25, 25, 25));
+                vertical.getChildren().add(new Label("Enter the following information to register"));
+                horizantal1.getChildren().addAll(new Label("first name"), first_name);
+                horizantal2.getChildren().addAll(new Label("last name"), last_name);
+                horizantal4.getChildren().addAll(new Label("username"), username_reg);
+                horizantal5.getChildren().add(max_credit);
+                horizantal6.getChildren().addAll(new Label("credit card"),credit_card);
+                horizantal7.getChildren().addAll(new Label(" card type"), card_type);
+                horizantal8.getChildren().addAll(new Label("Password"), password_reg);
+                horizantal9.getChildren().addAll(apply, cancel,warning);
+                vertical.getChildren().addAll(horizantal1,horizantal2,horizantal4,horizantal5,horizantal6,horizantal7,horizantal8,horizantal9);
+                warning.setTranslateY(30);
+                warning.setTranslateX(-150);
+                warning.setFill(Color.RED);
+                Scene sc2 = new Scene(vertical, 290, 400);
+                Stage newWindow = new Stage();
+                apply.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+
+                        try {
+                            ArrayList username_datebase=get_values();
+                            int j=0;
+                            for(int i=0;i<username_datebase.size();i+=7) {
+                                if (user_name.getText().equals(username_datebase.get(i))) ;
+                                username_exist.setText("already exist");
+                                j = j + 1;
+                            }
+                            int passourd_int=parseInt(password_reg.getText());
+                            insert_values(first_name.getText(), last_name.getText(), credit_card.getText(), passourd_int, card_type.getText(), username_reg.getText());
+                            newWindow.close();
+                            primaryStage.show();
+
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                cancel.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        newWindow.close();
+                        primaryStage.show();
+                    }
+                });
+
+                newWindow.setTitle("register_page");
+                newWindow.setScene(sc2);
+                newWindow.setX(primaryStage.getX() );
+                newWindow.setY(primaryStage.getY() );
+                newWindow.show();
+            }
+        });
+        Scene sc = new Scene(ver_pri,250,400);
+        primaryStage.setTitle("Bank account");
+        primaryStage.setScene(sc);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) throws Exception {
+        launch(args);
+    }
+    public static Connection getConnction() throws Exception {
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            System.out.println("Connecting to a selected database...");
+            Connection co = DriverManager.getConnection("jdbc:mysql://localhost:3306/users_account", "root", "5579");
+            System.out.println("conneted");
+            return co;
+        } catch (SQLException e) {
+            e.getNextException();
+        }
+        return null;
+    }
+    public static void insert_values(String firstname,String lastname,String credit_card,Integer password,String card_type,String username) throws Exception{
+
+        try {
+            Connection co2 = getConnction();
+            System.out.println("got connection");
+            PreparedStatement ps = co2.prepareStatement("INSERT INTO account_info(first_name,last_name,credit_card,password,card_type,username)VALUES('"+firstname+"','"+lastname+"','"+credit_card+"','"+password+"','"+card_type+"','"+username+"')");
+            ps.executeUpdate();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        finally {
+            System.out.println("inserted");
+        }
+    }
+    public static void insert_values_admin(String firstname,String lastname,Integer password,String username) throws Exception{
+
+        try {
+            Connection co2 = getConnction();
+            System.out.println("got connection");
+            PreparedStatement ps = co2.prepareStatement("INSERT INTO account_info_admin(first_name,last_name,password,username)VALUES('"+firstname+"','"+lastname+"','"+password+"','"+username+"')");
+            ps.executeUpdate();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        finally {
+            System.out.println("inserted");
+        }
+    }
+    public static void insert_salary(int salary,String credit_card) throws Exception{
+
+        try {
+            Connection co2 = getConnction();
+            System.out.println("got connection");
+            PreparedStatement ps = co2.prepareStatement("UPDATE account_info SET salary ='"+salary+"' where credit_card ='"+credit_card+"';");
+            ps.executeUpdate();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        finally {
+            System.out.println("inserted");
+        }
+    }
+    public static void insert_current_money_and_loan_state(String current_money,int loan_state) throws Exception{
+
+        try {
+            Connection co2 = getConnction();
+            System.out.println("got connection");
+            PreparedStatement ps = co2.prepareStatement("UPDATE account_info SET current_money ='"+current_money+"',loan_state ='"+loan_state+"';");
+            ps.executeUpdate();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        finally {
+            System.out.println("inserted");
+        }
+    }
+    public static ArrayList<String> get_values() throws Exception {
+
+        try {
+            Connection co2 = getConnction();
+            System.out.println("got connection");
+            PreparedStatement ps = co2.prepareStatement("select * from account_info");
+            ResultSet result = ps.executeQuery();
+            System.out.println("exeute query");
+            ArrayList Array=new ArrayList();
+            while (result.next()) {
+             Array.add(result.getString("username"));
+             Array.add(result.getString("password"));
+             Array.add(result.getString("first_name"));
+             Array.add(result.getString("last_name"));
+             Array.add(result.getString("credit_card"));
+             Array.add(result.getString("card_type"));
+             Array.add(result.getString("salary"));
+             Array.add(result.getString("loan_state"));
+             Array.add(result.getString("current_money"));
+
+
+            }
+            return Array;
+        } catch (Exception e) {
+            System.out.println(e);
+
+    }
+        return null;
+}
+    public static ArrayList<String> get_values_admin() throws Exception {
+
+        try {
+            Connection co2 = getConnction();
+            System.out.println("got connection");
+            PreparedStatement ps = co2.prepareStatement("select * from account_info_admin");
+            ResultSet result = ps.executeQuery();
+            System.out.println("exeute query");
+            ArrayList Array=new ArrayList();
+            while (result.next()) {
+                Array.add(result.getString("username"));
+                Array.add(result.getString("password"));
+                Array.add(result.getString("first_name"));
+                Array.add(result.getString("last_name"));
+
+
+            }
+            return Array;
+        } catch (Exception e) {
+            System.out.println(e);
+
+        }
+        return null;
+    }
+        }
+
